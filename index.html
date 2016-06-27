@@ -6,121 +6,124 @@
 <meta charset="utf-8">
 </head>
 <body style="margin: 0;">
-'Physco Energie Projekt'
+Physco Energie Projekt
 <script src="js/three.min.js"></script>
 <script src="js/ColladaLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
 
 <script>
 var scene, camera, renderer;
-var davidPlaneMaterial;
 init();
 animate();
 function init() {
-scene = new THREE.Scene();
-var WIDTH = window.innerWidth,
-HEIGHT = window.innerHeight;
-renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(WIDTH, HEIGHT);
-document.body.appendChild(renderer.domElement);
-camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 10000);
-camera.position.set(50,150,100);
-scene.add(camera);
-window.addEventListener('resize', function() {
-var WIDTH = window.innerWidth,
-HEIGHT = window.innerHeight;
-renderer.setSize(WIDTH, HEIGHT);
-camera.aspect = WIDTH / HEIGHT;
-camera.updateProjectionMatrix();
-});
-
-var light = new THREE.PointLight(0xfffff3, 0.8);
-light.position.set(-100,200,100);
-scene.add(light);
-
-var light = new THREE.PointLight(0xfffff3, 0.8);
-light.position.set(-500,200,0);
-scene.add(light);
-
-var lightDavid = new THREE.PointLight(0xfffff3, 0.8);
-lightDavid.position.set(300, 100, 200);
-scene.add(lightDavid);
-
-var lightnerd = new THREE.PointLight(0xfffff3, 0.8);
-lightnerd.position.set(0, 0, 500);
-scene.add(lightnerd);
-
-var sphereSize = 1;
-var pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
-scene.add( pointLightHelper );
-var light2 = new THREE.PointLight(0xd7f0ff, 0.2);
-light2.position.set(200,200,100);
-scene.add(light2);
-var sphereSize = 1;
-var pointLightHelper2 = new THREE.PointLightHelper( light2, sphereSize );
-scene.add( pointLightHelper2 );
-var light3 = new THREE.PointLight(0xFFFFFF, 0.5);
-light3.position.set(150,200,-100);
-scene.add(light3);
-var sphereSize = 1;
-var pointLightHelper3 = new THREE.PointLightHelper( light3, sphereSize );
-scene.add( pointLightHelper3 );
-var loader = new THREE.ColladaLoader();
-loader.options.convertUpAxis = true;
-loader.load( 'Erdgeschoss.dae', function ( collada ) {
-//dummy1.dae
-var dae = collada.scene;
-var skin = collada.skins[ 0 ];
-dae.scale.set(0.5,0.5,0.5);
-dae.position.set(-2500, 0, 1000);//x,z,y- if you think in blender dimensions ;)
-scene.add(dae);
-
-colorPlaneGeometry = new Array();
-colorPlaneMaterial = new Array();
-colorPlane = new Array();
-planePos = new Array();
-planeSize = new Array();
-
-planePos[0] = new Array(60,370); //x and z coordinates
-planePos[1] = new Array(-85,370);
-planePos[2] = new Array(-230,370);
-
-planeSize[0] = new Array(250,300);
-planeSize[1] = new Array(100,200);
-planeSize[2] = new Array(50,100);
-
-for (var i=0; i<3; i++) {   // Increment i by 1 for every planePos that is added;
-    colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], planeSize[i][2]);
-    colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
-    colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
-    colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
-    colorPlane[i].position.x = planePos[i][0];
-    colorPlane[i].position.y = 5;
-    colorPlane[i].position.z = planePos[i][1];
-    scene.add( colorPlane[i] );
-}
-var rotation = new THREE.Euler(1, 0, 0, 'Y');
-var axes = new THREE.AxisHelper(50);
-axes.position = dae.position;
-scene.add(axes);
-var gridXZ = new THREE.GridHelper(100, 10);
-gridXZ.setColors( new THREE.Color(0x8f8f8f), new THREE.Color(0x8f8f8f) );
-gridXZ.position.set(0,0,0 );
-scene.add(gridXZ);
-});
-controls = new THREE.OrbitControls(camera, renderer.domElement);
+    scene = new THREE.Scene();
+    var WIDTH = window.innerWidth,
+    HEIGHT = window.innerHeight;
+    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(WIDTH, HEIGHT);
+    document.body.appendChild(renderer.domElement);
+    camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 10000);
+    camera.position.set(50,150,100);
+    scene.add(camera);
+    window.addEventListener('resize', function() {
+        var WIDTH = window.innerWidth,
+        HEIGHT = window.innerHeight;
+        renderer.setSize(WIDTH, HEIGHT);
+        camera.aspect = WIDTH / HEIGHT;
+        camera.updateProjectionMatrix();
+    });
+    
+    var light1 = new THREE.PointLight(0xfffff3, 0.8);
+    light1.position.set(-100,200,100);
+    scene.add(light1);
+    
+    var light2 = new THREE.PointLight(0xfffff3, 0.8);
+    light2.position.set(-500,200,0);
+    scene.add(light2);
+    
+    var light3 = new THREE.PointLight(0xfffff3, 0.8);
+    light3.position.set(300, 100, 200);
+    scene.add(light3);
+    
+    var light4 = new THREE.PointLight(0xfffff3, 0.8);
+    light4.position.set(0, 0, 500);
+    scene.add(light4);
+    
+    var light5 = new THREE.PointLight(0xd7f0ff, 0.2);
+    light5.position.set(200,200,100);
+    scene.add(light5);
+    
+    var light6 = new THREE.PointLight(0xFFFFFF, 0.5);
+    light6.position.set(150,200,-100);
+    scene.add(light6);
+    
+    var sphereSize = 1;
+    
+    var pointLightHelper1 = new THREE.PointLightHelper( light1, sphereSize );
+    scene.add( pointLightHelper1 );
+    
+    var pointLightHelper2 = new THREE.PointLightHelper( light2, sphereSize );
+    scene.add( pointLightHelper2 );
+    
+    var pointLightHelper3 = new THREE.PointLightHelper( light3, sphereSize );
+    scene.add( pointLightHelper3 );
+    
+    var loader = new THREE.ColladaLoader();
+    loader.options.convertUpAxis = true;
+    loader.load( 'Erdgeschoss.dae', function ( collada ) {
+        //dummy1.dae
+        var dae = collada.scene;
+        var skin = collada.skins[ 0 ];
+        dae.scale.set(0.5,0.5,0.5);
+        dae.position.set(-2500, 0, 1000);//x,z,y- if you think in blender dimensions
+        scene.add(dae);
+        
+        colorPlaneGeometry = new Array();
+        colorPlaneMaterial = new Array();
+        colorPlane = new Array();
+        planePos = new Array();
+        planeSize = new Array();
+        
+        planePos[0] = new Array(60,370); //x and z coordinates
+        planePos[1] = new Array(-85,370);
+        planePos[2] = new Array(-230,370);
+        
+        planeSize[0] = new Array(250,300);
+        planeSize[1] = new Array(100,200);
+        planeSize[2] = new Array(50,100);
+        
+        for (var i=0; i<3; i++) {   // Increment i by 1 for every planePos that is added;
+            colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], planeSize[i][2]);
+            colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
+            colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
+            colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
+            colorPlane[i].position.x = planePos[i][0];
+            colorPlane[i].position.y = 5;
+            colorPlane[i].position.z = planePos[i][1];
+            scene.add( colorPlane[i] );
+        }
+        var rotation = new THREE.Euler(1, 0, 0, 'Y');
+        var axes = new THREE.AxisHelper(50);
+        axes.position = dae.position;
+        scene.add(axes);
+        var gridXZ = new THREE.GridHelper(100, 10);
+        gridXZ.setColors( new THREE.Color(0x8f8f8f), new THREE.Color(0x8f8f8f) );
+        gridXZ.position.set(0,0,0 );
+        scene.add(gridXZ);
+    });
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
 
 var rotationAngle = 0, cameraRadius = 1000;
 function animate() {
 
 requestAnimationFrame(animate);
-renderer.setClearColor(0xffffff, 1)
+renderer.setClearColor(0xffffff, 1);
 rotationAngle += 0.01;
 camera.position.x = Math.cos(rotationAngle) * cameraRadius;
 camera.position.z = Math.sin(rotationAngle) * cameraRadius;
- camera.lookAt( scene.position );
- camera.position.y = 500;
+camera.lookAt( scene.position );
+camera.position.y = 500;
 renderer.render(scene, camera);
 controls.update();
 
@@ -128,3 +131,4 @@ controls.update();
 </script>
 </body>
 </html>
+

@@ -84,16 +84,19 @@ function init() {
         planePos = new Array();
         planeSize = new Array();
 
-        planePos[0] = new Array(60,370); //x and z coordinates
+        planePos[0] = new Array(0,0); //x and z coordinates
         planePos[1] = new Array(-85,370);
         planePos[2] = new Array(-230,370);
+        planePos[3] = new Array(60,370);
+        planePos[4] = new Array(0,370);
 
         planeSize[0] = new Array(250,300);
         planeSize[1] = new Array(100,200);
         planeSize[2] = new Array(50,100);
+        planeSize[3] = new Array(100,200);
 
-        for (var i=0; i<3; i++) {   // Increment i by 1 for every planePos that is added;
-            colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], planeSize[i][2]);
+        for (var i=0; i<4; i++) {   // Increment i by 1 for every planePos that is added;
+            colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], 0);
             colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
             colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
             colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
@@ -114,7 +117,7 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
 
-var rotationAngle = 0, cameraRadius = 1000;
+var rotationAngle = 0, cameraRadius = 1500;
 var i=0;
 function animate() {
 
@@ -123,7 +126,7 @@ renderer.setClearColor(0xffffff, 1);
 i=i+1;
 if(i==500) {colorPlane[1].material.color.setHex(0x00FF00);}
 if(i==600)  {colorPlane[1].material.color.setHex(0xd7f0ff0);}
-rotationAngle += 0.01;
+rotationAngle += 0.005;
 camera.position.x = Math.cos(rotationAngle) * cameraRadius;
 camera.position.z = Math.sin(rotationAngle) * cameraRadius;
 camera.lookAt( scene.position );

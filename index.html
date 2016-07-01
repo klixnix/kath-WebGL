@@ -35,42 +35,31 @@ function init() {
         camera.aspect = WIDTH / HEIGHT;
         camera.updateProjectionMatrix();
     });
-
     var light1 = new THREE.PointLight(0xfffff3, 0.8);
     light1.position.set(-100,200,100);
     scene.add(light1);
-
     var light2 = new THREE.PointLight(0xfffff3, 0.8);
     light2.position.set(-500,200,0);
     scene.add(light2);
-
     var light3 = new THREE.PointLight(0xfffff3, 0.8);
     light3.position.set(300, 100, 200);
     scene.add(light3);
-
     var light4 = new THREE.PointLight(0xfffff3, 0.8);
     light4.position.set(0, 0, 500);
     scene.add(light4);
-
     var light5 = new THREE.PointLight(0xd7f0ff, 0.2);
     light5.position.set(200,200,100);
     scene.add(light5);
-
     var light6 = new THREE.PointLight(0xFFFFFF, 0.5);
     light6.position.set(150,200,-100);
     scene.add(light6);
-
     var sphereSize = 1;
-
     var pointLightHelper1 = new THREE.PointLightHelper( light1, sphereSize );
     scene.add( pointLightHelper1 );
-
     var pointLightHelper2 = new THREE.PointLightHelper( light2, sphereSize );
     scene.add( pointLightHelper2 );
-
     var pointLightHelper3 = new THREE.PointLightHelper( light3, sphereSize );
     scene.add( pointLightHelper3 );
-
     var loader = new THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
     loader.load( 'Erdgeschoss.dae', function ( collada ) {
@@ -80,28 +69,33 @@ function init() {
         dae.scale.set(0.5,0.5,0.5);
         dae.position.set(-2500, 0, 1000);//x,z,y- if you think in blender dimensions
         scene.add(dae);
-
         planePos = new Array();
         planeSize = new Array();
 
-        planePos[0] = new Array(0,0); //x and z coordinates
-        planePos[1] = new Array(-85,370);
-        planePos[2] = new Array(-230,370);
-        planePos[3] = new Array(60,370);
-        planePos[4] = new Array(0,370);
+        planePos[0] = new Array(10,0,0); //x and z coordinates
+        planePos[1] = new Array(400,-180,37); //Aula
+        planePos[2] = new Array(510,160,0);
+        planePos[3] = new Array(510,260,0);
+        planePos[4] = new Array(500,380,0);
+        planePos[5] = new Array(350,380,0);
+        planePos[6] = new Array(220,-50,0); //Mensa
 
-        planeSize[0] = new Array(250,300);
-        planeSize[1] = new Array(100,200);
-        planeSize[2] = new Array(50,100);
-        planeSize[3] = new Array(100,200);
+        planeSize[0] = new Array(200,300);
+        planeSize[1] = new Array(200,400); //Aula
+        planeSize[2] = new Array(116,100);
+        planeSize[3] = new Array(116,100);
+        planeSize[4] = new Array(200,110);
+        planeSize[5] = new Array(210,110);
+        planeSize[6] = new Array(210,600); //Mensa
 
-        for (var i=0; i<4; i++) {   // Increment i by 1 for every planePos that is added;
+        for (var i=0; i<7; i++) {   // Increment i by 1 for every planePos that is added;
             colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], 0);
             colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
             colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
             colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
             colorPlane[i].position.x = planePos[i][0];
-            colorPlane[i].position.y = 5;
+            if(planePos[i][2]==0) {colorPlane[i].position.y = 5;}
+            else {colorPlane[i].position.y = planePos[i][2];}
             colorPlane[i].position.z = planePos[i][1];
             scene.add( colorPlane[i] );
         }
@@ -116,24 +110,21 @@ function init() {
     });
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
-
-var rotationAngle = 0, cameraRadius = 1500;
+var rotationAngle = 0, cameraRadius = 1000;
 var i=0;
 function animate() {
-
 requestAnimationFrame(animate);
 renderer.setClearColor(0xffffff, 1);
 i=i+1;
 if(i==500) {colorPlane[1].material.color.setHex(0x00FF00);}
-if(i==600)  {colorPlane[1].material.color.setHex(0xd7f0ff0);}
-rotationAngle += 0.005;
+if(i==1)  {colorPlane[6].material.color.setHex(0xd7f0ff0);}
+rotationAngle += 0.01;
 camera.position.x = Math.cos(rotationAngle) * cameraRadius;
 camera.position.z = Math.sin(rotationAngle) * cameraRadius;
 camera.lookAt( scene.position );
 camera.position.y = 500;
 renderer.render(scene, camera);
 controls.update();
-
 }
 </script>
 </body>

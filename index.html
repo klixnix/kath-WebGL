@@ -75,26 +75,40 @@ function init() {
         planePos[0] = new Array(10,0,0); //x and z coordinates
         planePos[1] = new Array(400,-180,37); //Aula
         planePos[2] = new Array(510,160,0);
-        planePos[3] = new Array(510,260,0);
-        planePos[4] = new Array(500,380,0);
-        planePos[5] = new Array(350,380,0);
+        planePos[3] = new Array(520,275,0);
+        planePos[4] = new Array(497,380,0);
+        planePos[5] = new Array(325,380,0);
         planePos[6] = new Array(220,-50,0); //Mensa
         planePos[7] = new Array(70,380,0);
         planePos[8] = new Array(-78,390,0);
         planePos[9] = new Array(-222,380,0);
+        planePos[10] = new Array(-478,380,0);
+        planePos[11] = new Array(-648,380,0);
+        planePos[12] = new Array(-640,80,0);
+        planePos[13] = new Array(-680,-240,0);
+        planePos[14] = new Array(-495,-240,0);
+
 
         planeSize[0] = new Array(200,300);
         planeSize[1] = new Array(200,400); //Aula
         planeSize[2] = new Array(116,100);
         planeSize[3] = new Array(116,100);
-        planeSize[4] = new Array(200,110);
-        planeSize[5] = new Array(210,110);
+        planeSize[4] = new Array(178,110);
+        planeSize[5] = new Array(180,110);
         planeSize[6] = new Array(210,600); //Mensa
         planeSize[7] = new Array(152,114);
         planeSize[8] = new Array(148,135);
         planeSize[9] = new Array(146,114);
+        planeSize[10] = new Array(162,116);
+        planeSize[11] = new Array(162,116);
+        planeSize[12] = new Array(320,316);
+        planeSize[13] = new Array(180,150);
+        planeSize[14] = new Array(190,160);
 
-        for (var i=0; i<10; i++) {   // Increment i by 1 for every planePos that is added;
+
+
+
+        for (var i=0; i<15; i++) {   // Increment i by 1 for every planePos that is added;
             colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], 0);
             colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff,  side: THREE.DoubleSide} );
             colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
@@ -116,7 +130,7 @@ function init() {
     });
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
-var rotationAngle = 0, cameraRadius = 1000;
+var rotationAngle = 0, cameraRadius = 1400;
 var i=0;
 function animate() {
 requestAnimationFrame(animate);

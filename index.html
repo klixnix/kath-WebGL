@@ -53,6 +53,9 @@ function init() {
     var light6 = new THREE.PointLight(0xFFFFFF, 0.5);
     light6.position.set(150,200,-100);
     scene.add(light6);
+    var light7 = new THREE.PointLight(0xFFFFFF, 0.5);
+    light6.position.set(150,200,-100);
+    scene.add(light6);
     var sphereSize = 1;
     var pointLightHelper1 = new THREE.PointLightHelper( light1, sphereSize );
     scene.add( pointLightHelper1 );
@@ -84,9 +87,14 @@ function init() {
         planePos[9] = new Array(-222,380,0);
         planePos[10] = new Array(-478,380,0);
         planePos[11] = new Array(-648,380,0);
-        planePos[12] = new Array(-640,80,0);
+        planePos[12] = new Array(-640,80,0); //Ruhehof
         planePos[13] = new Array(-680,-240,0);
         planePos[14] = new Array(-495,-240,0);
+        planePos[15] = new Array(-250,-240,0);
+        planePos[16] = new Array(10,-253.5,0);
+        planePos[17] = new Array(6,-395,0); //Peters Stube
+        planePos[18] = new Array(-806,-247,0); //Chemie Lagerraum
+        planePos[19] = new Array(-195,30,0); //Sextanerhof
 
 
         planeSize[0] = new Array(200,300);
@@ -101,14 +109,19 @@ function init() {
         planeSize[9] = new Array(146,114);
         planeSize[10] = new Array(162,116);
         planeSize[11] = new Array(162,116);
-        planeSize[12] = new Array(320,316);
+        planeSize[12] = new Array(320,316); //Ruhehof
         planeSize[13] = new Array(180,150);
         planeSize[14] = new Array(190,160);
+        planeSize[15] = new Array(190,160);
+        planeSize[16] = new Array(190,192);
+        planeSize[17] = new Array(190,92); //Peters Stube
+        planeSize[18] = new Array(75,169); //Chemie Lagerraum
+        planeSize[19] = new Array(200,270); //Sextanerhof
 
 
 
 
-        for (var i=0; i<15; i++) {   // Increment i by 1 for every planePos that is added;
+        for (var i=0; i<20; i++) {   // Increment i by 1 for every planePos that is added;
             colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], 0);
             colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color: 0x00ffff,  side: THREE.DoubleSide} );
             colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
@@ -130,14 +143,16 @@ function init() {
     });
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
+
 var rotationAngle = 0, cameraRadius = 1400;
 var i=0;
+
 function animate() {
 requestAnimationFrame(animate);
 renderer.setClearColor(0xffffff, 1);
 i=i+1;
-if(i==500) {colorPlane[1].material.color.setHex(0x00FF00);}
-if(i==1)  {colorPlane[6].material.color.setHex(0xd7f0ff0);}
+if(i==5) {color(0,4);}
+if(i==5)  {color(1,1);}
 rotationAngle += 0.01;
 camera.position.x = Math.cos(rotationAngle) * cameraRadius;
 camera.position.z = Math.sin(rotationAngle) * cameraRadius;
@@ -146,6 +161,13 @@ camera.position.y = 500;
 renderer.render(scene, camera);
 controls.update();
 }
+
+function color(j, k) {
+  if(j==0) {colorPlane[k].material.color.setHex(0x00FF00);}
+  if(j==1) {colorPlane[k].material.color.setHex(0xd7f0ff0);}
+  if(j==2) {colorPlane[k].material.color.setHex(0x8f8f8f);}
+}
+
 </script>
 </body>
 </html>

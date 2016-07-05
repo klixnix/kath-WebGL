@@ -10,17 +10,17 @@ Physco Energie Projekt
 <script src="js/three.min.js"></script>
 <script src="js/ColladaLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
+<script src="js/papaparse.js"></script>
+
 
 <script>
-
 var scene, camera, renderer;
-var Temperatur, Temperatur1;
+var temperatur;
 var rotationAngle = 0, cameraRadius = 1400;
 var i=0;
 colorPlaneGeometry = new Array();
 colorPlaneMaterial = new Array();
 colorPlane = new Array();
-
 init();
 animate();
 
@@ -41,6 +41,9 @@ function init() {
         camera.aspect = WIDTH / HEIGHT;
         camera.updateProjectionMatrix();
     });
+
+    // Define lights
+    // TODO: make lights more dynamic
     var light1 = new THREE.PointLight(0xfffff3, 0.8);
     light1.position.set(-100,200,100);
     scene.add(light1);
@@ -69,113 +72,165 @@ function init() {
     scene.add( pointLightHelper2 );
     var pointLightHelper3 = new THREE.PointLightHelper( light3, sphereSize );
     scene.add( pointLightHelper3 );
+
+    // Load the DAE file
     var loader = new THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
-    loader.load( 'Erdgeschoss.dae', function ( collada ) {
-        //dummy1.dae
-        var dae = collada.scene;
-        var skin = collada.skins[ 0 ];
-        dae.scale.set(0.5,0.5,0.5);
-        dae.position.set(-2500, 0, 1000);//x,z,y- if you think in blender dimensions
-        scene.add(dae);
-        planePos = new Array();
-        planeSize = new Array();
+    loader.load('Erdgeschoss.dae', function (collada) {
+      //dummy1.dae
+      var dae = collada.scene;
+      var skin = collada.skins[ 0 ];
+      dae.scale.set(0.5,0.5,0.5);
+      dae.position.set(-2500, 0, 1000);//x,z,y- if you think in blender dimensions
+      scene.add(dae);
 
-        planePos[0] = new Array(10,0,0); //x and z coordinates
-        planePos[1] = new Array(400,-180,40); //Aula
-        planePos[2] = new Array(510,160,0);
-        planePos[3] = new Array(520,275,0);
-        planePos[4] = new Array(497,380,0);
-        planePos[5] = new Array(325,380,0);
-        planePos[6] = new Array(205,-50,0); //Mensa
-        planePos[7] = new Array(70,380,0);
-        planePos[8] = new Array(-78,390,0);
-        planePos[9] = new Array(-222,380,0);
-        planePos[10] = new Array(-478,380,0);
-        planePos[11] = new Array(-648,380,0);
-        planePos[12] = new Array(-640,80,5); //Ruhehof
-        planePos[13] = new Array(-680,-240,0);
-        planePos[14] = new Array(-495,-240,0);
-        planePos[15] = new Array(-250,-240,0);
-        planePos[16] = new Array(10,-253.5,0);
-        planePos[17] = new Array(6,-395,0); //Peters Stube
-        planePos[18] = new Array(-806,-247,0); //Chemie Lagerraum
-        planePos[19] = new Array(-195,30,0); //Sextanerhof
+      // Define plane positions and sizes
+      var planePos = [
+        [10,0,0], //x and z coordinates
+        [400,-180,40], //Aula
+        [510,160,0],
+        [520,275,0],
+        [497,380,0],
+        [325,380,0],
+        [205,-50,0], //Mensa
+        [70,380,0],
+        [-78,390,0],
+        [-222,380,0],
+        [-478,380,0],
+        [-648,380,0],
+        [-640,80,5], //Ruhehof
+        [-680,-240,0],
+        [-495,-240,0],
+        [-250,-240,0],
+        [10,-253.5,0],
+        [6,-395,0], //Peters Stube
+        [-806,-247,0], //Chemie Lagerraum
+        [-195,30,0], //Sextanerhof
+      ];
+      var planeSize = [
+        [200,300],
+        [200,400], //Aula
+        [116,100],
+        [116,100],
+        [178,110],
+        [180,110],
+        [170,600], //Mensa
+        [152,114],
+        [148,135],
+        [146,114],
+        [162,116],
+        [162,116],
+        [320,316], //Ruhehof
+        [180,150],
+        [190,160],
+        [190,160],
+        [190,192],
+        [190,92], //Peters Stube
+        [75,169], //Chemie Lagerraum
+        [200,270], //Sextanerhof
+      ];
 
+      for (var i = 0; i < 20; i++) {   // Increment i by 1 for every planePos that is added;
+        // Define plane geometry and material
+        colorPlaneGeometry[i] = new THREE.PlaneGeometry(planeSize[i][0], planeSize[i][1], 0);
+        colorPlaneMaterial[i] = new THREE.MeshBasicMaterial({
+          color: 0x95ff03,
+          side: THREE.DoubleSide
+        });
 
-        planeSize[0] = new Array(200,300);
-        planeSize[1] = new Array(200,400); //Aula
-        planeSize[2] = new Array(116,100);
-        planeSize[3] = new Array(116,100);
-        planeSize[4] = new Array(178,110);
-        planeSize[5] = new Array(180,110);
-        planeSize[6] = new Array(170,600); //Mensa
-        planeSize[7] = new Array(152,114);
-        planeSize[8] = new Array(148,135);
-        planeSize[9] = new Array(146,114);
-        planeSize[10] = new Array(162,116);
-        planeSize[11] = new Array(162,116);
-        planeSize[12] = new Array(320,316); //Ruhehof
-        planeSize[13] = new Array(180,150);
-        planeSize[14] = new Array(190,160);
-        planeSize[15] = new Array(190,160);
-        planeSize[16] = new Array(190,192);
-        planeSize[17] = new Array(190,92); //Peters Stube
-        planeSize[18] = new Array(75,169); //Chemie Lagerraum
-        planeSize[19] = new Array(200,270); //Sextanerhof
+        // Define the plane itself
+        colorPlane[i] = new THREE.Mesh(colorPlaneGeometry[i], colorPlaneMaterial[i]);
 
+        // Rotate the plane to the correct orientation
+        colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
 
-
-
-        for (var i=0; i<20; i++) {   // Increment i by 1 for every planePos that is added;
-            colorPlaneGeometry[i] = new THREE.PlaneGeometry( planeSize[i][0], planeSize[i][1], 0);
-            colorPlaneMaterial[i] = new THREE.MeshBasicMaterial( {color:0x95ff03 ,  side: THREE.DoubleSide} );
-            colorPlane[i] = new THREE.Mesh( colorPlaneGeometry[i], colorPlaneMaterial[i] );
-            colorPlane[i].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2);
-            colorPlane[i].position.x = planePos[i][0];
-            if(planePos[i][2]==0) {colorPlane[i].position.y = 10;}
-            else {colorPlane[i].position.y = planePos[i][2];}
-            colorPlane[i].position.z = planePos[i][1];
-            scene.add( colorPlane[i] );
+        // Set the plane's position
+        colorPlane[i].position.x = planePos[i][0];
+        if (planePos[i][2]==0) {
+          colorPlane[i].position.y = 10; // If the position is set to 0, move it up a little so it shows up on the screen
+        } else {
+          colorPlane[i].position.y = planePos[i][2];
         }
-        var rotation = new THREE.Euler(1, 0, 0, 'Y');
-        var axes = new THREE.AxisHelper(50);
-        axes.position = dae.position;
-        scene.add(axes);
-        var gridXZ = new THREE.GridHelper(100, 10);
-        gridXZ.setColors( new THREE.Color(0x8f8f8f), new THREE.Color(0x8f8f8f) );
-        gridXZ.position.set(0,0,0 );
-        scene.add(gridXZ);
+        colorPlane[i].position.z = planePos[i][1];
+
+        // Add plane to scene
+        scene.add(colorPlane[i]);
+      }
+
+      // Add axes
+      var rotation = new THREE.Euler(1, 0, 0, 'Y');
+      var axes = new THREE.AxisHelper(50);
+      axes.position = dae.position;
+      scene.add(axes);
     });
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
 
 function animate() {
   requestAnimationFrame(animate);
+
+  // Set the background colour to white
   renderer.setClearColor(0xffffff, 1);
-  Temperatur = new Array(20,22,30,25,16,17,15,24,27,14,12,26,25,22,27,17,29,22,21,30);
-  Temperatur1 = new Array(26,28,31,27,23,22,31,22,17,24,22,16,12,16,31,18,30,23,18,28); //Temperatur Array - Hier müssen dann die Temperaturdaten rein
-  i=i+1;
+
+  // Count up the frame colour
+  i = i + 1;
+
+  // Set the colours from the last loaded values, every 200 frames
+  if (i % 200 === 5) {
+    for (var p = 0; p < 20; p++) {
+      color(temperatur[p], p);
+    }
+  }
+
+  // Rotate camera
   rotationAngle += 0.01;
-  if(i==5) {for (var p=0; p<20; p++) {color(Temperatur[p],p);} }
-  if(i==100) {for (var q=0; q<20; q++) {color(Temperatur1[q],q);} }
-  if(i==200) {i=0;}
+
+  // Set camera position to new position calculated from angle
   camera.position.x = Math.cos(rotationAngle) * cameraRadius;
   camera.position.z = Math.sin(rotationAngle) * cameraRadius;
-  camera.lookAt( scene.position );
   camera.position.y = 650;
-  renderer.render(scene, camera);
-  controls.update();}
 
-function color(j, k) {
-  if(j<15 || j==15)                 {colorPlane[k].material.color.setHex(0x037eff);}
-  else if ((j>15 && j<20) || j==20) {colorPlane[k].material.color.setHex(0x03ffb5);}
-  else if ((j>20 && j<25) || j==25) {colorPlane[k].material.color.setHex(0x95ff03);}
-  else if ((j>25 && j<30) || j==30) {colorPlane[k].material.color.setHex(0xfff303);}
-  else if (j>30)                    {colorPlane[k].material.color.setHex(0xff0e05);}
+  // Orientate the camera towards the center
+  camera.lookAt(scene.position);
+
+  // Render the scene
+  renderer.render(scene, camera);
+  controls.update();
 }
+
+// Load a CSV file from the web server
+function reloadCSV() {
+  var file = 'http://127.0.0.1:3000/temperatur.csv';
+  Papa.parse(file, {
+    download: true,
+    error: function(err, file, inputElem, reason)
+    {
+      console.log("PapaParse error: " + err + " " + file + " " + inputElem + " " + reason);
+    },
+    complete: function(results) {
+      console.log(results);
+      temperatur = results.data[0];
+    }
+  });
+}
+
+// Convert a temperature value to a colour and set the responding plane's
+// colour value
+function color(j, k) {
+  if (j <= 15)                { colorPlane[k].material.color.setHex(0x037eff); }
+  else if (j > 15 && j <= 20) { colorPlane[k].material.color.setHex(0x03ffb5); }
+  else if (j > 20 && j <= 25) { colorPlane[k].material.color.setHex(0x95ff03); }
+  else if (j > 25 && j <= 30) { colorPlane[k].material.color.setHex(0xfff303); }
+  else if (j > 30)            { colorPlane[k].material.color.setHex(0xff0e05); }
+}
+
+// Load the CSV file once, then make it load every ten seconds.
+reloadCSV();
+setInterval(
+  reloadCSV,
+  10000
+);
 
 </script>
 </body>
 </html>
-

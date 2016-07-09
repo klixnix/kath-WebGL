@@ -76,7 +76,7 @@ function init() {
     // Load the DAE file
     var loader = new THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
-    loader.load('Erdgeschoss.dae', function (collada) {
+    loader.load('https://cdn.rawgit.com/klixnix/kath-WebGL/master/Erdgeschoss.dae', function (collada) {
       //dummy1.dae
       var dae = collada.scene;
       var skin = collada.skins[ 0 ];

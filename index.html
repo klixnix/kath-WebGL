@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
 
-<title>Test von Web GL</title>
+<title>Animation</title>
 <meta charset="utf-8">
 </head>
 <body style="margin: 0;">
-Physco Energie Projekt
-<script src="js/three.min.js"></script>
-<script src="js/ColladaLoader.js"></script>
-<script src="js/OrbitControls.js"></script>
-<script src="js/papaparse.js"></script>
+
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/ColladaLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.rawgit.com/mholt/PapaParse/master/papaparse.js"></script>
 
 
 <script>
 var scene, camera, renderer;
 var temperatur;
-var rotationAngle = 0, cameraRadius = 1400;
+var rotationAngle = 0, cameraRadius = 1600;
 var i=0;
+var light9 = new THREE.PointLight(0xffffff, 0.8);
 colorPlaneGeometry = new Array();
 colorPlaneMaterial = new Array();
 colorPlane = new Array();
@@ -32,7 +33,7 @@ function init() {
     renderer.setSize(WIDTH, HEIGHT);
     document.body.appendChild(renderer.domElement);
     camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 10000);
-    camera.position.set(50,150,100);
+    camera.position.set(50,850,100);
     scene.add(camera);
     window.addEventListener('resize', function() {
         var WIDTH = window.innerWidth,
@@ -44,7 +45,7 @@ function init() {
 
     // Define lights
     // TODO: make lights more dynamic
-    var light1 = new THREE.PointLight(0xfffff3, 0.8);
+    var light1 = new THREE.PointLight(0xfffff3, 0.2);
     light1.position.set(-100,200,100);
     scene.add(light1);
     var light2 = new THREE.PointLight(0xfffff3, 0.8);
@@ -56,15 +57,20 @@ function init() {
     var light4 = new THREE.PointLight(0xfffff3, 0.8);
     light4.position.set(0, 0, 500);
     scene.add(light4);
-    var light5 = new THREE.PointLight(0xd7f0ff, 0.2);
+    var light5 = new THREE.PointLight(0xd7f0ff, 0.8);
     light5.position.set(200,200,100);
     scene.add(light5);
-    var light6 = new THREE.PointLight(0xFFFFFF, 0.5);
+    var light6 = new THREE.PointLight(0xFFFFFF, 0.8);
     light6.position.set(150,200,-100);
     scene.add(light6);
-    var light7 = new THREE.PointLight(0xFFFFFF, 0.5);
+    var light7 = new THREE.PointLight(0xFFFFFF, 0.8);
     light6.position.set(150,200,-100);
     scene.add(light6);
+    var light8 = new THREE.PointLight(0xfffff3, 1);
+    light8.position.set(600,100,-300);
+    scene.add(light8);
+    light9.position.set(0,0,0);
+    scene.add(light9);
     var sphereSize = 1;
     var pointLightHelper1 = new THREE.PointLightHelper( light1, sphereSize );
     scene.add( pointLightHelper1 );
@@ -176,7 +182,7 @@ function animate() {
   i = i + 1;
 
   // Set the colours from the last loaded values, every 200 frames
-  if (i % 200 === 5) {
+  if (i % 200 == 5) {
     for (var p = 0; p < 20; p++) {
       color(temperatur[p], p);
     }
@@ -185,10 +191,29 @@ function animate() {
   // Rotate camera
   rotationAngle += 0.01;
 
+
+  //change perspective after 2000 frames
+  if(i==2000) {
+    cameraRadius=200;
+    camera.position.y = 2000;
+  }
+
+ //return to the old perspective after 3005 frames and set the frame to 0
+  if(i==3005) {
+    cameraRadius = 1400;
+    camera.position.y = 850;
+    i = 0;
+  }
+
+  //light positions
+  light9.position.x = Math.cos(rotationAngle) * cameraRadius+50;
+  light9.position.z = Math.sin(rotationAngle) * cameraRadius+50;
+  light9.position.y = 600;
+
   // Set camera position to new position calculated from angle
   camera.position.x = Math.cos(rotationAngle) * cameraRadius;
   camera.position.z = Math.sin(rotationAngle) * cameraRadius;
-  camera.position.y = 650;
+
 
   // Orientate the camera towards the center
   camera.lookAt(scene.position);
@@ -196,11 +221,14 @@ function animate() {
   // Render the scene
   renderer.render(scene, camera);
   controls.update();
+  if(i % 5 == 0) {
+    console.log(i);
+}
 }
 
 // Load a CSV file from the web server
 function reloadCSV() {
-  var file = 'http://127.0.0.1:3000/temperatur.csv';
+  var file = 'http://10.10.1.118:3000/temperatur.csv';
   Papa.parse(file, {
     download: true,
     error: function(err, file, inputElem, reason)
@@ -217,7 +245,8 @@ function reloadCSV() {
 // Convert a temperature value to a colour and set the responding plane's
 // colour value
 function color(j, k) {
-  if (j <= 15)                { colorPlane[k].material.color.setHex(0x037eff); }
+  if (j === 0)                { colorPlane[k].material.color.setHex(0x000000); }
+  else if (j <= 15)           { colorPlane[k].material.color.setHex(0x037eff); }
   else if (j > 15 && j <= 20) { colorPlane[k].material.color.setHex(0x03ffb5); }
   else if (j > 20 && j <= 25) { colorPlane[k].material.color.setHex(0x95ff03); }
   else if (j > 25 && j <= 30) { colorPlane[k].material.color.setHex(0xfff303); }

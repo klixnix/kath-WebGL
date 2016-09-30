@@ -28,6 +28,10 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
+app.get('/test', function(req, res) {
+  res.send("Der Server funktioniert.");
+});
+
 app.listen(3000, function() {
 	console.log('Der Visualisierungs-Server läuft auf Port 3000!');
   
